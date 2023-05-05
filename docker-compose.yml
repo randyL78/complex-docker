@@ -1,62 +1,44 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  postgres:
-    image: 'postgres:latest'
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=postgres_password
-
-  redis:
-    image: 'redis:latest'
-    restart: always
-
-  nginx:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    restart: always
-    ports:
-      - "8080:80"
-    depends_on:
-      - client
-      - api
-
-  api:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./server
-    environment:
-      - PGPASSWORD=postgres_password
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPORT=5432
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    volumes:
-      - /app/node_modules
-      - ./server:/app
-    depends_on:
-      - postgres
-      - redis
   client:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: randyl78/complex-client
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    hostname: client
+  api:
+    image: randyl78/complex-server
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    hostname: api
     environment:
-      - WDS_SOCKET_PORT=0
-
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./worker
+    image: randyl78/complex-worker
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    hostname: worker
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+  nginx:
+    image: randyl78/complex-nginx
+    hostname: nginx
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    ports:
+      - "80:80"
