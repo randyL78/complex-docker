@@ -9,7 +9,7 @@ services:
           memory: 128m
     hostname: client
   api:
-    image: randyl78/complex-server
+    image: randyl78/complex-api
     deploy:
       resources:
         limits:
