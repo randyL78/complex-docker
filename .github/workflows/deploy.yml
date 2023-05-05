@@ -20,7 +20,7 @@
 
         - name: Build all services
           run: docker build -t ${{ secrets.DOCKER_USERNAME }}/complex-client ./client
-        - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/complex-api ./service
+        - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/complex-api ./server
         - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/complex-nginx ./nginx
         - run: docker build -t ${{ secrets.DOCKER_USERNAME }}/complex-worker ./worker
 
@@ -33,17 +33,17 @@
         - name: Generate deployment package
           run: zip -r deploy.zip . -x '*.git*'
 
-        - name: Deploy to EBS
-          uses: einaregilsson/beanstalk-deploy@v18
-          with:
-            aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            region: us-east-1
-            version_label: ${{ github.sha }}
-            application_name: multi-docker
-            environment_name: multi-docker-env
-            existing_bucket_name: elasticbeanstalk-us-east-1-319633945198
-            deployment_package: deploy.zip
+#        - name: Deploy to EBS
+#          uses: einaregilsson/beanstalk-deploy@v18
+#          with:
+#            aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+#            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#            region: us-east-1
+#            version_label: ${{ github.sha }}
+#            application_name: multi-docker
+#            environment_name: multi-docker-env
+#            existing_bucket_name: elasticbeanstalk-us-east-1-319633945198
+#            deployment_package: deploy.zip
 
 
 
