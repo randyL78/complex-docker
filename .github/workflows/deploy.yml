@@ -37,7 +37,7 @@
           uses: einaregilsson/beanstalk-deploy@v18
           with:
             aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
             region: us-east-1
             version_label: ${{ github.sha }}
             application_name: multi-docker
